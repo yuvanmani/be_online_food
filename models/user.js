@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
         city: String,
         state: String,
         pincode: String
+    },
+    otp: String,
+    otpExpires: Date,
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 
