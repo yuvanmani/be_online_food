@@ -4,7 +4,7 @@ const restaurantController = {
     createRestaurant: async (req, res) => {
         try {
             // get the userId from request
-            const manager = req.userId;
+            const user = req.userId;
 
             // get the restaurant details from the request body
             const { name, cuisineType, hours, description } = req.body;
@@ -19,7 +19,7 @@ const restaurantController = {
 
             // create a new restaurant
             const newRestaurant = new Restaurant({
-                name, manager, cuisineType, hours, description,
+                name, user, cuisineType, hours, description,
                 location: { door_no, street, city, state, country, pincode }
             })
 

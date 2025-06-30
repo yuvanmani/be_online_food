@@ -7,7 +7,7 @@ const restaurantSchema = new mongoose.Schema({
         trim: true
     },
 
-    manager: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
