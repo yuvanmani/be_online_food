@@ -8,8 +8,7 @@ const authController = {
     register: async (req, res) => {
         try {
             // get the details from the request body
-            const { name, email, password, role } = req.body;
-            const { street, city, state, pincode } = req.body.address;
+            const { name, email, password, role, street, city, state, pincode } = req.body;
 
             // validate input
             if (!name || !email || !password) {
@@ -73,7 +72,7 @@ const authController = {
             await sendEmail(email, "Your OTP code", `Your verification code for registering in app is : ${otp}`);
 
             // send response to the user
-            return res.status(200).json({ message: "OTP sent to your email for verification" });
+            res.status(200).json({ message: "OTP sent to your email for verification" });
         }
         catch (error) {
             return res.status(500).json({ message: "Registration failed" })
@@ -147,8 +146,8 @@ const authController = {
             // set the token in a cookie
             res.cookie("token", token, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "Strict",
+                secure: true,
+                sameSite: "None",
                 maxAge: 3600000
             })
 
@@ -162,7 +161,11 @@ const authController = {
     logout: async (req, res) => {
         try {
             // clear the cookie
-            res.clearCookie("token");
+            res.clearCookie("token", {
+                httpOnly: true,
+                secure: true,
+                sameSite: "None"
+            });
 
             // send the response to the user
             return res.status(200).json({ message: "Logout successful" });

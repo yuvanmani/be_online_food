@@ -7,8 +7,14 @@ const userRouter = require("./routes/userRoutes");
 const restaurantRouter = require("./routes/restaurantRoutes");
 const menuItemRouter = require("./routes/menuItemRoutes");
 const orderRouter = require("./routes/orderRoutes");
+const cors = require("cors");
 
 const app = express();
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}))
 
 // middleware to parse cookies
 app.use(cookieParser());
