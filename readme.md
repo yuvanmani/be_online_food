@@ -1,3 +1,6 @@
+### Important Note
+I had deployed my back end server in free instance type on render.com. So the API requests are take sometime to respond us. Please wait for sometime for response. Thank you.
+
 # Online Food Delivery System
 
 ## Description
