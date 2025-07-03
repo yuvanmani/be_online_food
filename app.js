@@ -12,7 +12,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-    origin: "https://fe-online-food-delivery-system.netlify.app/",
+    origin: "https://fe-online-food-delivery-system.netlify.app",
     credentials: true
 }))
 
