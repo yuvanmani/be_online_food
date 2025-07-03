@@ -8,49 +8,41 @@ const orderController = {
             const userId = req.userId;
 
             // get the items details from the request body
-            const { items } = req.body;
+            const { menuId, quantity } = req.body;
 
-            if (!items || !items.length) {
+            if (!menuId || quantity < 1) {
                 return res.status(400).json({ message: "No items in order" });
             }
 
-            // fetch the menu items from the database
-            const menuItemIds = items.map(item => item.menuItemId);
-            const menuItems = await MenuItem.find({ _id: { $in: menuItemIds } });
+            // fetch the menu item from the database
+            const menuItem = await MenuItem.find({ _id: { $in: menuId } });
 
-            if (menuItems.length !== items.length) {
+            // find the name of the ordered menu item
+            const menuItemName = menuItem[0].name;
+
+            if (!menuItem || menuItem.length <= 0) {
                 return res.status(404).json({ message: "Menu items not found" });
             }
 
             // check all items belong to the same restaurant
-            const restaurantIds = new Set(menuItems.map(item => item.restaurantId.toString()));
-            if (restaurantIds.size > 1) {
-                return res.status(400).json({ message: "All items must be from the same restaurant" });
-            }
+            const restaurantId = menuItem[0].restaurantId;
 
-            // if all item from same restaurant get the restaurant details from menu item
-            const restaurantId = menuItems[0].restaurantId;
-            const restaurantName = menuItems[0].restaurantName;
+            // if all item from same restaurant get the restaurant name from menu item
+            const restaurantName = menuItem[0].restaurantName;
 
             // calculate the total amount of ordered items
-            const totalAmount = items.reduce((acc, item) => {
-                const menuItem = menuItems.find(menuItem => menuItem._id.toString() === item.menuItemId);
-                if (!menuItem) {
-                    return res.status(400).json({ message: `Invalid menuItemId: ${item.menuItemId}` });
-
-                }
-                return acc + menuItem.price * item.quantity;
-            }, 0);
+            const totalAmount = menuItem[0].price * quantity;
 
             // create the new order
             const newOrder = new Order({
                 userId,
                 restaurantId,
                 restaurantName,
-                items,
-                totalAmount
+                menuItemName,
+                totalAmount,
+                quantity
             });
-
+            console.log(newOrder)
             // save the order in the database
             await newOrder.save();
 
@@ -63,16 +55,24 @@ const orderController = {
     },
     getAllOrders: async (req, res) => {
         try {
-            const orders = await Order.find()
-                .populate({ path: "userId", select: "-__v -password -createdAt -updatedAt -role -isVerified" })
-                .populate({ path: "restaurantId", select: "-__v -createdAt -updatedAt -owner -hours -cuisineType -description" })
-                .populate({ path: "items.menuItemId", select: "-restaurantId -restaurantName -category -description -createdAt -updatedAt -__v -_id" })
-                .select("-__v -createdAt -updatedAt");
+            const orders = await Order.find().select("-__v -createdAt -updatedAt");
 
             res.status(200).json(orders);
         }
         catch (error) {
             return res.status(500).json({ message: "Get all orders failed" });
+        }
+    },
+    getOrdersByUserId: async (req, res) => {
+        try {
+            const userId = req.userId;
+
+            const userOrders = await Order.find({ userId: userId }).select("-__v -createdAt -updatedAt");
+
+            res.status(200).json(userOrders);
+        }
+        catch (error) {
+            return res.status(500).json({ message: "Get order by user id failed" });
         }
     },
     getOrderById: async (req, res) => {

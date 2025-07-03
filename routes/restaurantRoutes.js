@@ -4,9 +4,9 @@ const { isAuthenticated, allowRoles } = require("../middlewares/auth");
 
 const restaurantRouter = express.Router();
 
-restaurantRouter.post("/", isAuthenticated, allowRoles(["manager", "admin"]), createRestaurant);
+restaurantRouter.post("/", isAuthenticated, allowRoles(["admin"]), createRestaurant);
 restaurantRouter.get("/", getAllRestaurants);
 restaurantRouter.get("/:id", getRestaurantById);
-restaurantRouter.delete("/:id", isAuthenticated, allowRoles(["manager", "admin"]), deleteRestaurantById);
+restaurantRouter.delete("/:id", isAuthenticated, allowRoles(["admin"]), deleteRestaurantById);
 
 module.exports = restaurantRouter;

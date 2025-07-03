@@ -65,10 +65,10 @@ This is a online food delivery system application using MERN stack (MongoDB, Exp
     - DELETE "/:id" - Delete a user by Id (admin only)
 
 /restaurants
-    - POST "/" - Create a new restaurant (manager & admin only)
+    - POST "/" - Create a new restaurant (admin only)
     - GET "/" - Get all restaurants
     - GET "/:id" - Get a restaurant by Id
-    - DELETE "/:id" - Delete a restaurant by Id (manager & admin only)
+    - DELETE "/:id" - Delete a restaurant by Id (admin only)
 
 /menuItems
     - POST "/" - Create a menuItem (manager & admin only)
@@ -78,8 +78,8 @@ This is a online food delivery system application using MERN stack (MongoDB, Exp
     - DELETE "/:id" - Delete a menuItem by Id (manager & admin only)
 
 /orders
-    - POST "/" - Place a new order (user, manager, admin only)
-    - GET "/" - Get all orders (manager & admin only)
+    - POST "/" - Place a new order (user only)
+    - GET "/" - Get all orders (manager only)
     - GET "/:id" - Get a order by Id (manager & admin only)
     - PUT "/:id" - Update a order by Id (manager & admin only)
     - DELETE "/:id" - Delete a order by Id (manager & admin only)
