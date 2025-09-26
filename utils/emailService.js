@@ -1,31 +1,23 @@
-const nodemailer = require("nodemailer");
-const { EMAIL_USER, EMAIL_PASS } = require("../utils/config");
+const { EMAIL_USER, SENDGRID_API_KEY } = require("../utils/config");
+const sgMail = require("@sendgrid/mail");
 
-// create a sendEmail function to trigger email service
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+// create a sendEmail function to send OTP via email
 const sendEmail = async (to, subject, text) => {
     try {
-        // create a transporter object to send email
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true,
-            auth: {
-                user: EMAIL_USER,
-                pass: EMAIL_PASS
-            }
-        })
 
         // setup mail data
-        const mailOptions = {
+        const msg = {
             from: EMAIL_USER,
             to: to,
             subject: subject,
-            text : text
+            text: text
         }
 
         // send the email
-        const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent : %s", info.messageId);
+        const info = await sgMail.send(msg);
+        console.log("Email sent : ", info[0].statusCode);
     }
     catch (error) {
         console.log("Error sending email", error);
